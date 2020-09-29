@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fast MP3 Length</title>
+<meta charset='UTF-8' />
+<script type="text/javascript" src="./mp3_utils.js"></script>
+</head>
+
+<body>
+<button id='get-duration-but'>Get Duration</button>
+<input type="file" id="upload-file">
+
+<script>
+'use strict'
+function getDurationInHMS(timeSeconds) {
+    timeSeconds = Number(timeSeconds);
+    var h = Math.floor(timeSeconds / 3600);
+    var m = Math.floor(timeSeconds % 3600 / 60);
+    var s = Math.floor(timeSeconds % 3600 % 60);
+
+    let mStr = (m < 9 ? "0" : "") + m;
+    let sStr = (s < 9 ? "0" : "") + s;
+    return `${h}:${mStr}:${sStr}`;
+}
+
+document.getElementById('get-duration-but').addEventListener('click', function(event) {
+    let files = document.getElementById('upload-file').files;
+    if (files.length === 0) {
+        alert('No show upload file has been selected.');
+        return;
+    }
+
+    var file = files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        let mp3Duration = new Mp3Duration();
+        let fileDuration = mp3Duration.getDuration(e.target.result);
+        let fileDurationStr = getDurationInHMS(fileDuration);
+        alert(`The file duration is ${fileDurationStr}`);
+    }
+    reader.readAsArrayBuffer(file);
+});
+</script>
+</html>
